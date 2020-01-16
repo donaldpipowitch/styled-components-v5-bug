@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Demo</title>
+    <base href="/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <%= require('./initial').styleTags %>
+  </head>
+  <body>
+    <!-- "top: 0; width: 100vw;" is needed to prevent jumping in firefox -->
+    <div id="initial" style="position: fixed; top: 0; width: 100vw; background: white; z-index: 1;">
+      <%= require('./initial').html %>
+    </div>
+    <div id="app"></div>
+  </body>
+</html>
