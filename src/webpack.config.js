@@ -6,7 +6,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 const rules = [
   {
-    test: /\.tsx?$/,
+    test: /\.jsx?$/,
     exclude: /node_modules/,
     loader: 'babel-loader',
     options: require('./babel.config')
@@ -14,29 +14,13 @@ const rules = [
   {
     test: /\.css$/,
     loader: 'file-loader'
-  },
-  {
-    test: /\.(png|jpg|gif|svg|ico)$/,
-    loader: 'url-loader?limit=1000&name=[name]-[hash].[ext]'
-  },
-  {
-    test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-    loader: 'file-loader'
-  },
-  {
-    test: /\.(woff|woff2)$/,
-    loader: 'url-loader?prefix=font/&limit=5000'
-  },
-  {
-    test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-    loader: 'url-loader?limit=10000&mimetype=application/octet-stream'
   }
 ];
 
 const mode = dev ? 'development' : 'production';
 const watch = dev;
 
-const entry = ['./src/index.tsx'];
+const entry = ['./src/index.jsx'];
 if (dev) entry.push('webpack-plugin-serve/client');
 
 const output = {
@@ -63,43 +47,12 @@ if (dev) {
       port: 4200,
       static: output.path,
       progress: false,
-      historyFallback: true,
-      middleware: (app, builtins) =>
-        app.use(async (ctx, next) => {
-          // these file are processed by the file loader and hashed (even for development)
-          // serve them with active caching to avoid flashing content
-          // (e.g. fonts would be requested multiple times withing development,
-          // because we use hot reloading)
-          const exts = [
-            '.png',
-            '.jpg',
-            '.gif',
-            '.svg',
-            '.ico',
-            '.css',
-            '.eot',
-            '.woff',
-            '.woff2',
-            '.ttf'
-          ];
-          const [url] = ctx.url.split('?');
-          if (exts.some((ext) => url.endsWith(ext))) {
-            ctx.set('Cache-Control', 'public, max-age=31536000');
-          }
-          await next();
-        })
+      historyFallback: true
     })
   );
 }
 
-const extensions = ['.ts', '.tsx', '.js'];
-
-const resolveLoader = {
-  alias: {
-    // see https://www.npmjs.com/package/copy-loader
-    'copy-loader': 'file-loader?name=[path][name].[ext]&context=./src'
-  }
-};
+const extensions = ['.js', '.jsx'];
 
 const stats = {
   // copied from `'minimal'`
@@ -125,6 +78,5 @@ module.exports = {
     extensions
   },
   stats,
-  resolveLoader,
   devtool
 };
